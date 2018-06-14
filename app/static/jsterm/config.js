@@ -1,7 +1,7 @@
 var CONFIG = CONFIG || {
 	python_version: 'Python 3.6.2',
 	gcc_version: '4.8.2',
-	sys_platform: 'linux2',
+	sys_platform: 'arch linux',
 	username: 'allen',
 	ipython: false
 };
@@ -35,21 +35,26 @@ var ContactInformation = {
 
 
 var AboutMeStr = '***************************************************************************************<br>'+
-          'hi,我的allen。现在居住地<i class="fa fa-map-marker">深圳</i><br>'+
-          '目前是一名pythoner。之前一直用c做嵌入式的网络设备开发。后来因为换工作开始使用python来做web app。<br>'+
-          '从此喜欢上了python的简捷,快速和<span class="prettytext">There is only one way to do it</span> 的编程思想。<br>'+
-          '目前的技术栈是 python, C, tornado， flask, mongodb， redis， nodejs， golang, mysql, git, linux。网站部署常用的是supervisord+nginx+git<br>'+
-          '这个是我的个人网站。当然你可以从<a href="http://github.com/jack-zh" target="_blank">GitHub</a>上面看到我之前写的一些乱七八糟的项目。<br>'+
-          '你可以通过邮件联系我 <a href="mailto:zzh.coder@qq.com">zzh.coder#qq.com</a> 或者QQ: 715443050 或者<a target="_blank" href="'+ 'http://github.com/jack-zh' +'">微博</a><br>'+
-          '最后你可以试着输入 <span class="prettytext">jack.__doc__</span> 看看这个module有哪些属性和方法以便您更好的了解和使用它<br>'+
+          'hi,我是allen。现在居住地<i class="fa-map-marker">深圳</i><br>'+
+          '本人对未知得世界总是充满好奇，喜欢了解不同方面的知识。我一直梦想有过目不忘的本领，<br>' +
+	      '但可惜现实很残酷，学过的很多知识转头就忘了。<br>'+
+          '我相信很多人也是如此。那该如何呢？<br>'+
+          '俗话说<span class="prettytext">好记性不如烂笔头</span>，确实如此。<br>' +
+		  '既然不能过目不忘就写下来，时不时得回顾，做到<span class="prettytext">温故而知新</span>。<br>'+
+          '这相当于一个私人版的wiki，把自己学到的知识加入进去，方便以后查找和温故。<br>'+
+          '也可以记录自己在探索的路上所经历的艰难险阻。<br>'+
+          '可以不断积累自己的技能，让自己越来越强大。<br>'+
+          '这个是本人的<a href="http://github.com/saury2013" target="_blank">GitHub</a>上面看到我之前写的一些乱七八糟的项目。<br>'+
+          '你可以通过邮件联系我 <a href="mailto:saury2011@sina.com">saury2011@sina.com</a><br>'+
+          '最后你可以试着输入 <span class="prettytext">allen.__doc__</span> 看看这个module有哪些属性和方法以便您更好的了解和使用它<br>'+
           '你可以点击命令输出结果中的任何绿色文字连接。在输入命令的时候如果你想中途退出，请输入Ctrl+D或者Ctrl+C。<br>'+
           '你可以输入&uarr;或者&darr;查看之前输入的命令<br>'+
           '***************************************************************************************<br>'
 
 var InitCommands = [
 	"python",
-	"import jack",
-	"jack.__doc__",
+	"import allen",
+	"allen.__doc__",
 	"exit()"
 ];
 

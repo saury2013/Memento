@@ -5,8 +5,9 @@
    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
    <meta name="viewport" content="width=device-width,height=device-height,inital-scale=1.0,maximum-scale=1.0,user-scalable=no;" />
    <meta name="description" content="">
-   <link type="text/css" rel="stylesheet" href="/static/jsterm/style.css">
-   <link rel="stylesheet" href="/static/jsterm/font-awesome.min.css">
+   <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='jsterm/style.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', filename='jsterm/font-awesome.min.css') }}">
+
 </head>
 <body>
    <script type="text/javascript" src="/static/jsterm/command.js"></script>
@@ -16,7 +17,7 @@
       console.log(
          "*************************************************************\n"+
          "hi,程序员你好,猜到你会看本页面的前台代码的。\n"+
-         "你可以通过本页面的"+ CONFIG.username +"模块的sendmail方法给我发邮件 或者 qq:715443050\n"+
+         "你可以通过本页面的"+ CONFIG.username +"模块的sendmail方法给我发邮件 \n"+
          '**************************************************************'
       );
    </script>

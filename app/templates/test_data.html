@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title -%}
+	test_data
+{% endblock title %}
+{% block content %}
+<div class="col-lg-10 col-lg-offset-2">
+    <div class="input-group">
+        <form action="{{url_for('main.test')}}" method="post">
+            <input type="text" class="form-control">
+            <input type="text" class="form-control">
+            <input type="submit" class="btn-success">
+        </form>
+
+    </div><!-- /input-group -->
+
+</div><!-- /.row -->
+{% endblock %}
