@@ -4,8 +4,11 @@ from sqlalchemy.dialects.mysql import LONGTEXT
 from sqlalchemy.orm import load_only
 from sqlalchemy import func
 from flask import abort
+from markdown import Markdown,markdown
 
 from app.models import db,fragment_tags_table
+from app.models.tag import Tag
+from app.whoosh import search_helper
 
 
 class Fragment(db.Model):
@@ -27,7 +30,7 @@ class Fragment(db.Model):
     updatetime = db.Column(db.DateTime,default=datetime.now,nullable=False)
 
     user_id = db.Column(db.Integer,db.ForeignKey('user.id'))
-    # tags = db.relationship('Tag',secondary=fragment_tags_table,backref=db.backref('fragments'))
+    tags = db.relationship('Tag',secondary=fragment_tags_table,backref=db.backref('fragments'))
     # branch = db.relationship('Branch',back_populates='fragment',uselist=False)
     branch_id = db.Column(db.Integer,db.ForeignKey('branch.id'))
     # branch = db.relationship('Branch',foreign_keys=branch_id)
@@ -35,9 +38,37 @@ class Fragment(db.Model):
     def get(self,id):
         return Fragment.query.get(id)
 
-    def get_or_404(self,id):
+    @staticmethod
+    def get_or_404(id):
         fragment = Fragment.query.get(id)
         if fragment:
             return fragment
         abort(404)
+
+    def save(self):
+        self.html = self.markdown2html(self.markdown)
+        db.session.add(self)
+        db.session.commit()
+        search_helper.add_document(self.title,str(self.id),self.markdown)
+
+    def markdown2html(self,content):
+        # md = Markdown(['codehilite', 'fenced_code', 'meta', 'tables'])
+        # html = md.convert(content)
+        html = markdown(content,extensions=[
+                                     'markdown.extensions.extra',
+                                     'markdown.extensions.codehilite',
+                                     'markdown.extensions.toc',
+                                  ])
+        return html
+    @staticmethod
+    def get_nearest_fragments(num=5):
+        fragments = Fragment.query.filter().order_by(Fragment.updatetime.desc()).limit(num)
+        res = []
+        from app.models.branch import Branch
+        for fragment in fragments:
+            fragment.branch = Branch.get(fragment.branch_id)
+            res.append(fragment)
+        return res
+
+
 

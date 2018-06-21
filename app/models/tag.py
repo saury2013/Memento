@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from sqlalchemy.sql import func
 from app.models import db
 
 class Tag(db.Model):
@@ -26,3 +26,22 @@ class Tag(db.Model):
     @staticmethod
     def all():
         return Tag.query.all()
+
+    @staticmethod
+    def get_all_chioces():
+        tags = Tag.all()
+        return [(tag.id,tag.name) for tag in tags]
+
+    @staticmethod
+    def get_by_ids(ids):
+        return db.session.query(Tag).filter(Tag.id.in_(ids)).all()
+
+    @staticmethod
+    def get_hot_tags(num=10):
+        tags = Tag.query.filter().order_by("id").limit(num)
+        return db.session.query(Tag).order_by(Tag.id).all()
+
+    @staticmethod
+    def get_fragments_by_tagname(name):
+        tag = db.session.query(Tag).filter_by(name=name).first()
+        return tag.fragments

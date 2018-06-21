@@ -2,7 +2,7 @@
 from flask_login import current_user,logout_user,login_user
 from flask import redirect,render_template,url_for,flash
 from app.auth import auth
-from app.auth.form import LoginForm
+from app.auth.form import LoginForm,RegisterForm
 from app.models.user import User
 
 @auth.route("/login/",methods=['GET','POST'])
@@ -20,6 +20,22 @@ def login():
     form.remember.data = True
     return render_template("login.html",form=form)
 
+@auth.route("/register/",methods=['GET','POST'])
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        if form.password.data == form.password2.data:
+            user = User.add(form.username.data,form.password.data)
+            if user:
+                return redirect(url_for("auth.login"))
+            else:
+                flash("username has exsist!")
+        else:
+            flash("two password must be same!")
+
+    return render_template("register.html",form=form)
+
 @auth.route("/logout/")
 def logout():
-    return 'bye'
+    logout_user()
+    return redirect(url_for("main.home"))

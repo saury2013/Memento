@@ -7,8 +7,10 @@ from app.models.user import User
 from app.models.fragment import Fragment
 from app.models.branch import Branch
 from app.models.tag import Tag
+from app.main.views.home import url_for_other_page
 
 application = create_app()
+application.jinja_env.globals['url_for_other_page'] = url_for_other_page
 manager = Manager(application)
 
 def make_shell_context():

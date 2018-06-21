@@ -1,115 +1,171 @@
 {% extends "base.html" %}
 
-{% block title -%}
-Wiki Editor
-{%- endblock title %}
+{% block header_css %}
+<link rel="stylesheet" href="{{ url_for('static',filename='editormd/css/editormd.css') }}"/>
+{% endblock header_css %}
 
-{% block content %}
-<ul class="nav nav-tabs">
-  <li class="active"><a href="#editor" data-toggle="tab">Editor</a></li>
-  <li><a href="#preview" data-toggle="tab" id="previewlink">Preview</a></li>
-</ul>
-<div class="tab-content">
-  <div class="tab-pane active" id="editor">
-    <form method="post" class="form">
-      {{ form.hidden_tag() }}
-      {{ input(form.title, placeholder="Title", class="span7") }}
-      {{ input(form.body, placeholder="Markdown", class="span7", rows="20") }}
-      {{ input(form.tags, placeholder="Tags (comma separated)", class="span7") }}
-      <div class="form-actions">
-        <div class="pull-left">
-          <a class="btn" href="#preview" id="previewbtn">Preview</a>
+{% block container %}
+<div class="row">
+    <h1 class="text-center">Edit Fragment</h1>
+
+    <form method="post" action="{{ url_for('main.create') }}">
+        {{ form.hidden_tag() }}
+        <div class="row">
+            <div class="form-group">
+                {{ form.title.label }}
+                {% if form.title.errors %}
+                {% for e in form.title.errors %}
+                <p class="help-block">{{ e }}</p>
+                {% endfor %}
+                {% endif %}
+                {{ form.title(class_='form-control') }}
+            </div>
+
+
+            <div class="form-group">
+                {{ form.body.label }}
+                {% if form.body.errors %}
+                {% for e in form.body.errors %}
+                <p class="help-block">{{ e }}</p>
+                {% endfor %}
+                {% endif %}
+                <div id="editormd" class="form-control">
+                    {{ form.body(text="1") }}
+                </div>
+            </div>
         </div>
-        <div class="pull-right">
-          <a class="btn" href="{{ url_for('display', url=page.url) }}">Cancel</a>
-          <button class="btn btn-success" type="submit">Save</button>
+        <div class="row">
+            <div class="form-group col-lg-3">
+                {{ form.branch.label }}
+                <!-- Button trigger modal -->
+                <button type="button" class="glyphicon glyphicon-plus" data-toggle="modal" data-target="#branchModal">
+                </button>
+                {% if form.branch.errors %}
+                {% for e in form.branch.errors %}
+                <p class="help-block">{{ e }}</p>
+                {% endfor %}
+                {% endif %}
+                {{ form.branch(class_='form-control') }}
+            </div>
         </div>
-      </div>
+        <div class="row">
+            <div class="form-group col-lg-3">
+                {{ form.tags.label }}
+                <!-- Button trigger modal -->
+                <button type="button" class="glyphicon glyphicon-plus" data-toggle="modal" data-target="#tagModal">
+                </button>
+                {% if form.tags.errors %}
+                {% for e in form.tags.errors %}
+                <p class="help-block">{{ e }}</p>
+                {% endfor %}
+                {% endif %}
+                {{ form.tags(class_='form-control') }}
+
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="form-group">
+                <input class="btn btn-success" type="submit" value="Submit">
+            </div>
+        </div>
     </form>
-  </div>
-  <div class="tab-pane" id="preview"></div>
+    <!-- tagModal -->
+    <div class="modal fade" id="tagModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Add Tag</h4>
+                </div>
+                <div class="modal-body">
+                    <input id="new_tag" type="text" name="tag" class="form-control" placeholder="input a new tag...">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="add_tag()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- branchModal -->
+    <div class="modal fade" id="branchModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Add Branch</h4>
+                </div>
+                <div class="modal-body">
+                    <label>parent branch:</label>
+                    {{ form.branch(class_='form-control new_branch_parent') }}
+                    <label>new branch:</label>
+                    <input id="new_branch" type="text" name="branch" class="form-control" placeholder="new branch">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="add_branch()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-{% endblock content %}
-{% block sidebar %}
+{% endblock container %}
 
-<h3><a href="/upload" target="_blank">Show all Uploads</a></h3>
-<h3>Upload Resources</h3>
-<p>You can upload image for markdown</p>
-<form name="form" action="" method="POST" enctype="multipart/form-data"> 
-      <p><input id="file" type="file" size="45" name="file" class="input" /></p>
-      <h6>Please select a file and click Upload button</h6> 
-      <p><button class="button" id="buttonUpload" onclick="return ajaxFileUpload();">Upload</button></p>
-  </form>
-  </br>
-<h3>Upload list:</h3>
-<pre id="uploadlist"></pre>
+{% block bottom_js %}
+<script src="{{ url_for('static',filename='editormd/editormd.min.js') }}"></script>
+<script type="text/javascript">
+    var testEditor;
 
-{% endblock sidebar %}
-{% block postscripts -%}
-{{ super() }}
-$('#previewlink').on('click', function() {
-  var $form = $('.form');
-  var $inputs = $form.find('input, textarea, button');
-  var $pre = $('#preview');
-  var bodycontent = 'title: preview\n\n' + $form.find('textarea').val();
-  $inputs.prop('disabled', true);
-  $pre.removeClass('alert').removeClass('alert-error').html("Loading...");
-  $.ajax({
-    url: "{{ url_for('preview') }}",
-    type: "POST",
-    data: { body: bodycontent },
-    success: function(msg) {
-      $pre.html(msg);
-      console.log(msg);
-    },
-    error: function() {
-  $pre.addClass('alert').addClass('alert-error');
-      $pre.html('There was a problem with the preview.');
-    },
-    complete: function() {
-      $inputs.prop('disabled', false);
-    }
-  });
-});
-$('#previewbtn').on('click', function(event) {
-  event.preventDefault();
-  $('#previewlink').click();
-});
-
-function ajaxFileUpload(){
-        $("#loading")
-        .ajaxStart(function(){
-            $(this).show();
-        })
-        .ajaxComplete(function(){
-            $(this).hide();
+    $(function () {
+        testEditor = editormd("editormd", {
+            width: "100%",
+            height: 750,
+            syncScrolling: "single",
+            path: "{{ url_for('static',filename='editormd/lib/') }}"
         });
-        $.ajaxFileUpload({
-            url:'/upload/',
-            type:'post',
-            secureuri:false,
-            fileElementId:'file',
-            dataType: 'json',
-            success: function (data, status)
-            {
-                var file = $("#file") 
-                file.after(file.clone().val(""));   
-                file.remove(); 
-                console.log(data);
-                console.log(status);
-                if(!data.error){
-                    var list = $("#uploadlist");
-                    var html = list.html() + data.filename + "'s url:\n" + data.url + "<hr style='border:1px dashed blue'/>";
-                    list.html(html)
-                }else{
-                    alert("upload error.")
-              }
-            },
-            error: function (data, status, e)
-            {
-                alert("upload error.")
+    });
+
+    function add_tag() {
+
+        $.post('/api/add_tag/', {
+            name: $("#new_tag").val()
+        }).done(function (response) {
+            var res = JSON.parse(response);
+            if (res["status"] == 200) {
+                alert("success to add the tag:" + res["tag"]["name"]);
+                // $("#tagModal").modal('hide');
+                location.reload();
             }
-        })
-        return false;
-    } 
-{%- endblock postscripts %}
+            else
+                alert("filed to add the tag:" + res["msg"]);
+
+        }).fail(function () {
+            alert("can not add the tag:" + name);
+        });
+    }
+
+    function add_branch() {
+
+        $.post('/api/add_branch/', {
+            name: $("#new_branch").val(),
+            parent: $(".new_branch_parent").val()
+        }).done(function (response) {
+            var res = JSON.parse(response);
+            if (res["status"] == 200) {
+                alert("success to add the branch:" + res["branch"]["name"]);
+                // $("#branchModal").modal('hide');
+                location.reload();
+            }
+            else
+                alert("filed to add the branch:" + res["msg"]);
+
+        }).fail(function () {
+            alert("can not add the branch:" + name);
+        });
+    }
+</script>
+{% endblock bottom_js %}

@@ -1,26 +1,95 @@
 {% extends "base.html" %}
+{% import "helpers.html" as macros %}
 
-{% block title %}Index by Tags{% endblock title %}
+{% block header %}
+<h2 class="text-center">Index by Tags</h2>
+<hr>
+{% endblock header %}
 
 {% block content %}
 {% if tags %}
-	<table class="table">
+	<table class="table table-hover">
 		<thead>
 			<tr>
+				<th>#</th>
 				<th>Tag</th>
-				<th>Number of Articles</th>
+				<th>Number of Fragments</th>
 			</tr>
 		</thead>
 		<tbody>
-			{% for tag, pages in tags|dictsort %}
+			{% for tag in tags %}
 				<tr>
-					<td><a href="{{ url_for('tag', name=tag) }}">{{ tag }}</a></td>
-					<td>{{ pages|length }}</td>
+					<td>{{ tag.id }}</td>
+					<td><a href="{{ url_for('main.result_by_tag', name=tag.name,page=1) }}">{{ tag.name }}</a></td>
+					<td>{{ tag.fragments|length }}</td>
 				</tr>
 			{% endfor %}
 		</tbody>
 	</table>
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination,'main.tags') }}
+</div>
+{% endif %}
 {% else %}
 	<p>There are no tags in use so far.</p>
 {% endif %}
 {% endblock content %}
+{% block sidebar %}
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">Operators</div>
+  <!-- List group -->
+  <ul class="list-group" style="cursor:pointer">
+    <li class="list-group-item" data-toggle="modal" data-target="#tagModal">Create</li>
+    <li class="list-group-item">Update</li>
+    <li class="list-group-item">Delete</li>
+  </ul>
+</div>
+
+<!-- tagModal -->
+        <div class="modal fade" id="tagModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Add Tag</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input id="new_tag" type="text" name="tag" class="form-control" placeholder="input a new tag...">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="add_tag()">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+{% endblock sidebar %}
+
+{% block bottom_js %}
+<script src="{{ url_for('static',filename='editormd/editormd.min.js') }}"></script>
+<script type="text/javascript">
+    function add_tag() {
+
+            $.post('/api/add_tag/', {
+                name: $("#new_tag").val()
+            }).done(function(response) {
+                var res = JSON.parse(response);
+                if(res["status"] == 200){
+                    alert("success to add the tag:"+res["tag"]["name"]);
+                    // $("#tagModal").modal('hide');
+                    location.reload();
+                }
+                else
+                    alert("filed to add the tag:"+res["msg"]);
+
+            }).fail(function() {
+                alert("can not add the tag:"+name);
+            });
+        }
+
+</script>
+{% endblock bottom_js %}

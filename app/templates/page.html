@@ -1,38 +1,49 @@
 {% extends "base.html" %}
+{% block header_css%}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='highlights/github.css') }}">
+{% endblock header_css%}
 
-{% block title %}
-	{{ page.title }}
-{% endblock title %}
+{% block container %}
 
-{% block content %}
-  <div id="confirmDelete" class="modal hide fade" aria-hidden="true">
-    <div class="modal-header">
-      <h3>Are you sure?</h3>
-    </div>
-    <div class="modal-body">
-      <p>Are you sure you want to delete {{ page.title }}?  This cannot be undone.</p>
-    </div>
-    <div class="modal-footer">
-      <a href="#" class="btn" data-dismiss="modal" aria-hidden="true">No</a>
-      <a href="{{ url_for('delete', url=page.url ) }}" class="btn btn-danger">Yes, delete.</a>
-    </div>
-  </div>
-	{{ page }}
-{% endblock content %}
+      <div class="row">
 
-{% block sidebar %}
-{% if page.tags %}
-<h3>Tags</h3>
-  <ul>
-      {% for tag in page.tags.split(',') %}
-        <li><a href="{{ url_for('tag', name=tag.strip()) }}">{{ tag|trim }}</a></li>
-      {% endfor %}
-  </ul>
-{% endif %}
-<h3>Actions</h3>
-<ul class="nav nav-tabs nav-stacked">
-	<li><a href="{{ url_for('edit', url=page.url ) }}">Edit</a></li>
-  <li><a href="{{ url_for('move', url=page.url ) }}">Move</a></li>
-  <li><a href="#confirmDelete" data-toggle="modal" class="text-error">Delete</a></li>
-</ul>
-{% endblock sidebar %}
+        <div class="col-sm-8 main-main">
+
+          <div class="main-post">
+            <h2 class="main-post-title">{{ fragment.title }}</h2>
+            <p class="main-post-meta">{{ fragment.updatetime }} by <a href="#">Mark</a></p>
+            {{ fragment.html|safe }}
+          </div><!-- /.main-post -->
+
+
+
+          <nav>
+            <ul class="pager">
+              <li><a href="#">Previous</a></li>
+              <li><a href="#">Next</a></li>
+            </ul>
+          </nav>
+
+        </div><!-- /.main-main -->
+
+        <div class="col-sm-3 col-sm-offset-1 main-sidebar">
+          <div class="sidebar-module">
+            <h4>Relative Branch</h4>
+            <ol class="list-unstyled">
+              {% for branch in branchs %}
+              <li><a href="#">{{ branch.name }}</a></li>
+              {% endfor %}
+            </ol>
+          </div>
+          <div class="sidebar-module">
+            <h4>Elsewhere</h4>
+            <ol class="list-unstyled">
+              <li><a href="#">GitHub</a></li>
+              <li><a href="#">Twitter</a></li>
+              <li><a href="#">Facebook</a></li>
+            </ol>
+          </div>
+        </div><!-- /.main-sidebar -->
+
+      </div><!-- /.row -->
+{% endblock container %}

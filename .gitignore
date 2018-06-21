@@ -36,3 +36,6 @@ venv/
 .idea/
 .idea/*.xml
 .idea/vcs.xml
+
+app/branch_tree.json
+app/whoosh/index/

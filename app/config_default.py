@@ -8,13 +8,12 @@ class Config(object):
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    # catalog max depth
-    CATALOG_DEEP = 3
+
     ERROR_LOG = "../logs/error.log"
     INFO_LOG = "../logs/info.log"
 
-    DB_PREFIX = "bb_"
-    PER_PAGE = 20
+
+    PER_PAGE = 10
 
     STATIC_IMG_PATH = "img"
 
@@ -22,7 +21,7 @@ class Config(object):
     TMP_PATH = "resource/tmp"
     IMAGE_PATH = "resource/image/image"
 
-    BOOK_COVER_PATH = "resource/image/cover"
+
 
 
 
