@@ -39,3 +39,4 @@ venv/
 
 app/branch_tree.json
 app/whoosh/index/
+app/static/resource/uploads/image/

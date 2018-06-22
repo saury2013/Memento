@@ -50,7 +50,7 @@ def create():
     if form.validate_on_submit():
         fragment.title = form.title.data
         fragment.markdown = form.body.data
-        # fragment.user_id = current_user.id
+        fragment.user_id = current_user.id
         fragment.branch_id = form.branch.data
         tags_id = form.tags.data
         tags = Tag.get_by_ids(tags_id)
@@ -71,7 +71,7 @@ def page(id):
     if fragment:
         author = User.get(fragment.user_id)
         if author:
-            author_name = author.name
+            author_name = author.username
         branch = Branch.get(fragment.branch_id)
         relative_fragments = Branch.get_fragments_by_branchname(branch.name)
     branchs = Branch.get_nearest_branch(deep=3,me_id=fragment.branch_id)
