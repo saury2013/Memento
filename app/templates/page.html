@@ -5,45 +5,50 @@
 
 {% block container %}
 
-      <div class="row">
+<div class="row">
 
-        <div class="col-sm-8 main-main">
+    <div class="col-sm-8 main-main">
 
-          <div class="main-post">
+        <div class="main-post">
             <h2 class="main-post-title">{{ fragment.title }}</h2>
-            <p class="main-post-meta">{{ fragment.updatetime }} by <a href="#">Mark</a></p>
+            <p class="main-post-meta">{{ fragment.updatetime }} by <a href="#">{{ author_name }}</a></p>
             {{ fragment.html|safe }}
-          </div><!-- /.main-post -->
+        </div><!-- /.main-post -->
 
 
-
-          <nav>
+        <nav>
             <ul class="pager">
-              <li><a href="#">Previous</a></li>
-              <li><a href="#">Next</a></li>
+                <li><a href="{{ url_for('main.page',id=fragment.id-1) }}">Previous</a></li>
+                <li><a href="{{ url_for('main.page',id=fragment.id+1) }}">Next</a></li>
             </ul>
-          </nav>
+        </nav>
 
-        </div><!-- /.main-main -->
+    </div><!-- /.main-main -->
 
-        <div class="col-sm-3 col-sm-offset-1 main-sidebar">
-          <div class="sidebar-module">
+    <div class="col-sm-3 col-sm-offset-1 main-sidebar">
+        <div class="sidebar-module">
             <h4>Relative Branch</h4>
             <ol class="list-unstyled">
-              {% for branch in branchs %}
-              <li><a href="#">{{ branch.name }}</a></li>
-              {% endfor %}
+                {% for branch in branchs %}
+                <li><a href="{{ url_for('main.result_by_branch', name=branch.name,page=1) }}">{{ branch.name }}</a></li>
+                {% endfor %}
             </ol>
-          </div>
-          <div class="sidebar-module">
-            <h4>Elsewhere</h4>
+        </div>
+        <div class="sidebar-module">
+            <h4>Relative Fragments</h4>
             <ol class="list-unstyled">
-              <li><a href="#">GitHub</a></li>
-              <li><a href="#">Twitter</a></li>
-              <li><a href="#">Facebook</a></li>
+                {% if relative_fragments %}
+                {% for f in relative_fragments %}
+                {% if f.title != fragment.title %}
+                <li><a href="{{ url_for('main.page',id=f.id) }}">{{ f.title }}</a></li>
+                {% endif %}
+                {% endfor %}
+                {% else %}
+                no relative fragments yet.
+                {% endif %}
             </ol>
-          </div>
-        </div><!-- /.main-sidebar -->
+        </div>
+    </div><!-- /.main-sidebar -->
 
-      </div><!-- /.row -->
+</div><!-- /.row -->
 {% endblock container %}

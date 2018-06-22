@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from flask import render_template,request,flash,redirect,url_for,jsonify,make_response
 from flask_login import current_user,login_required
-import json
 from app.main import main
 from app.models.branch import Branch
 from app.models.fragment import Fragment
 from app.models.tag import Tag
+from app.models.user import User
 from app.main.forms.fragment import CreateFragmentForm
 from app.utils.pagination_helper import Pagination
 
@@ -66,8 +66,16 @@ def create():
 @main.route('/page/<int:id>/')
 def page(id):
     fragment = Fragment.get_or_404(id)
+    relative_fragments = []
+    author_name = 'NoName'
+    if fragment:
+        author = User.get(fragment.user_id)
+        if author:
+            author_name = author.name
+        branch = Branch.get(fragment.branch_id)
+        relative_fragments = Branch.get_fragments_by_branchname(branch.name)
     branchs = Branch.get_nearest_branch(deep=3,me_id=fragment.branch_id)
-    return render_template("page.html",fragment=fragment,branchs=branchs)
+    return render_template("page.html",fragment=fragment,branchs=branchs,relative_fragments=relative_fragments,author_name=author_name)
 
 @main.route('/result_by_tag/<string:name>/<int:page>')
 def result_by_tag(name,page):

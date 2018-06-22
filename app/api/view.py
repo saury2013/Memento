@@ -33,7 +33,6 @@ def add_branch():
     response = {"status": 500, "msg": "name is Null!"}
     name = request.form['name']
     parent_id = request.form['parent']
-    print(name, "--", parent_id)
     if name != "":
         branch = Branch.add(name, parent_id=parent_id)
         if branch:
@@ -48,8 +47,6 @@ def add_branch():
 @api.route("/search/<string:keyword>")
 def search(keyword):
     res = search_helper.search(keyword)
-    print(res)
     data = {}
     data["result"] = res
-
     return jsonify(data)

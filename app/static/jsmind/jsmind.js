@@ -1172,6 +1172,8 @@
         },
 
         dblclick_handle:function(e){
+            console.log("------dblclick_handle222-------",this.options.default_event_handle['enable_dblclick_handle'])
+            console.log("------dblclick_handle222-------",this.get_editable())
             if (!this.options.default_event_handle['enable_dblclick_handle']) {
                 return;
             }
@@ -1180,6 +1182,16 @@
                 var nodeid = this.view.get_binded_nodeid(element);
                 if(!!nodeid){
                     this.begin_edit(nodeid);
+                }
+            }else{
+                //这里重新编写双击事件
+                var element = e.target || event.srcElement;
+                var nodeid = this.view.get_binded_nodeid(element);
+                if(!!nodeid){
+                    var selected_node = this.get_node(nodeid);
+                    var node_name = selected_node.topic;
+                    var url = "/result_by_branch/" + node_name + "/1";
+                    window.open(url);
                 }
             }
         },
