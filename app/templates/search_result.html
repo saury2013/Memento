@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block container %}
+<section class="search">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="nav-tabs-group">
+                    <ul class="nav-tabs-list">
+                        <li class="active"><a href="#">All</a></li>
+                        <li><a href="#">Latest</a></li>
+                        <li><a href="#">Popular</a></li>
+                        <li><a href="#">Trending</a></li>
+                        <li><a href="#">Videos</a></li>
+                    </ul>
+                </div>
+                <div class="search-result">
+                    Search results for keyword "{{ keyword }}" found in {{ results|length }} fragments.
+                </div>
+                <div class="row">
+                    {% for item in results %}
+                    <div class="panel panel-danger">
+                        <div class="panel-body">
+                            <h5><a href="{{ url_for('main.page',id=item.path) }}">{{ item.title }}</a></h5>
+                        </div>
+                        <div class="panel-footer">
+                            <p>{{ item.content }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <div class="col-md-12 text-center">
+                        <ul class="pagination">
+                            <li class="prev"><a href="#"><i class="ion-ios-arrow-left"></i></a></li>
+                            <li class="active"><a href="#">1</a></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li><a href="#">...</a></li>
+                            <li><a href="#">97</a></li>
+                            <li class="next"><a href="#"><i class="ion-ios-arrow-right"></i></a></li>
+                        </ul>
+                        <div class="pagination-help-text">
+                            Showing 8 results of 776 &mdash; Page 1
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock container %}

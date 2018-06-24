@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import make_response, request, jsonify
+from flask import make_response, request, jsonify,render_template
 from flask_login import login_required
 import json
 from werkzeug.utils import secure_filename
@@ -11,6 +11,7 @@ from app.models.tag import Tag
 from app.api import api
 from app.whoosh import search_helper
 from app import base_dir
+from app.api.form import SearchForm
 
 UPLOAD_FOLDER = 'static/resource/uploads/image/'
 ALLOWED_EXTENSIONS = set(['bmp', 'webp', 'png', 'jpg', 'jpeg', 'gif'])
@@ -22,6 +23,7 @@ def add_tag():
     # name = request.args.get('name', 0, type=int)
     response = {"status": 500, "msg": "name is Null!"}
     name = request.form['name']
+    print(name)
     if name != "":
         tag = Tag.add(name)
         if tag:
@@ -30,6 +32,7 @@ def add_tag():
             response["status"] = 200
         else:
             response["msg"] = "tag has already exists!"
+        print(response)
     return make_response(json.dumps(response))
 
 
@@ -53,9 +56,19 @@ def add_branch():
 @api.route("/search/<string:keyword>")
 def search(keyword):
     res = search_helper.search(keyword)
+    print(res)
     data = {}
     data["result"] = res
     return jsonify(data)
+
+@api.route("/search2/",methods=['POST'])
+def search2():
+    form = SearchForm(request.form)
+    results = ""
+    keyword = form.keyword.data
+    if form.validate_on_submit():
+        results = search_helper.search(keyword)
+    return render_template("search_result.html",results=results,keyword=keyword)
 
 def allowed_file(filename):
     return '.' in filename and \

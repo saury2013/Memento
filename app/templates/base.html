@@ -1,126 +1,212 @@
 <!DOCTYPE html>
-{% from "helpers.html" import input %}
 <html lang="zh-CN">
 <head>
-    <link rel="shortcut icon" href="/static/favicon.ico"/>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap-3.3.7/css/bootstrap.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='pygments.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mystyle.css') }}">
-    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='ui/scripts/bootstrap/bootstrap.min.css') }}">
+    <!-- IonIcons -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='ui/scripts/ionicons/css/ionicons.min.css') }}">
+    <!-- Toast -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='ui/scripts/toast/jquery.toast.min.css') }}">
+    <!-- OwlCarousel -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='ui/scripts/owlcarousel/dist/assets/owl.carousel.min.css') }}">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='ui/scripts/owlcarousel/dist/assets/owl.theme.default.min.css') }}">
+    <!-- Magnific Popup -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='ui/scripts/magnific-popup/dist/magnific-popup.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='ui/scripts/sweetalert/dist/sweetalert.css') }}">
+    <!-- Custom style -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='ui/css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='ui/css/skins/all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='ui/css/demo.css') }}">
+
     {% block header_css %}{% endblock header_css %}
     <title>Memeto</title>
 </head>
 
-<body>
-<!-- Fixed navbar -->
-<div class="nav-masthead">
-    <nav class="navbar navbar-default navbar-fixed-top">
+<body class="skin-orange">
+{% block body %}
+<header class="primary">
+    <div class="firstbar">
         <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-                        aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="{{ url_for('main.home') }}">Memento</a>
+            <div class="row">
+                <div class="col-md-3 col-sm-12">
+                    <div class="brand">
+                        <a href="{{ url_for('main.home') }}">
+                            <img src="{{ url_for('static', filename='ui/images/logo.png') }}" alt="Magz Logo">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <form class="search" action="{{ url_for('api.search2') }}" autocomplete="off" method="post">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" name="keyword" class="form-control"
+                                       placeholder="Type something here">
+                                <div class="input-group-btn">
+                                    <button class="btn btn-primary"><i class="ion-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="help-block">
+                            <div>Popular:</div>
+                            <ul>
+                                <li><a href="#">Python</a></li>
+                                <li><a href="#">C++</a></li>
+                                <li><a href="#">Linux</a></li>
+                                <li><a href="#">MySQL</a></li>
+                                <li><a href="#">Redis</a></li>
+                            </ul>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-3 col-sm-12 text-right">
+                    <ul class="nav-icons">
+                        {% if not current_user.username %}
+                        <li><a href="{{ url_for('auth.register') }}"><i class="ion-person-add"></i>
+                            <div>Register</div>
+                        </a></li>
+                        <li><a href="{{ url_for('auth.login') }}"><i class="ion-person"></i>
+                            <div>Login</div>
+                        </a></li>
+                        {% else %}
+                        <!--<li><a href="register.html"><i class="ion-person-add"></i><div>Logout</div></a></li>-->
+                        <li><a href="{{ url_for('auth.logout') }}"><i class="ion-person"></i>
+                            <div>Welcome {{ current_user.username }}!</div>
+                        </a></li>
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    {% if request.path == '/' %}
-                    <li class="active"><a href="{{ url_for('main.home') }}">Home</a></li>
-                    {% else %}
-                     <li><a href="{{ url_for('main.home') }}">Home</a></li>
-                    {% endif %}
-                    {% if request.path == '/branch' %}
-                    <li class="active"><a href="{{ url_for('main.branch') }}">Branch</a></li>
-                    {% else %}
-                     <li><a href="{{ url_for('main.branch') }}">Branch</a></li>
-                    {% endif %}
-                    {% if request.path == '/tags' %}
-                    <li class="active"><a href="{{ url_for('main.tags') }}">Tags</a></li>
-                    {% else %}
-                     <li><a href="{{ url_for('main.tags') }}">Tags</a></li>
-                    {% endif %}
-                    {% if request.path == '/mindmap' %}
-                    <li class="active"><a href="{{ url_for('main.mindmap') }}">MindMap</a></li>
-                    {% else %}
-                     <li><a href="{{ url_for('main.mindmap') }}">MindMap</a></li>
-                    {% endif %}
-                    {% if request.path == '/about' %}
-                    <li class="active"><a href="{{ url_for('main.about') }}">About</a></li>
-                    {% else %}
+        </div>
+    </div>
+
+    <!-- Start nav -->
+    <nav class="menu">
+        <div class="container">
+            <div class="brand">
+                <a href="{{ url_for('main.home') }}">
+                    <img src="{{ url_for('static', filename='ui/images/logo.png') }}" alt="Magz Logo">
+                </a>
+            </div>
+            <div class="mobile-toggle">
+                <a href="#" data-toggle="menu" data-target="#menu-list"><i class="ion-navicon-round"></i></a>
+            </div>
+            <div class="mobile-toggle">
+                <a href="#" data-toggle="sidebar" data-target="#sidebar"><i class="ion-ios-arrow-left"></i></a>
+            </div>
+            <div id="menu-list">
+                <ul class="nav-list">
+                    <li class="for-tablet nav-title"><a>Menu</a></li>
+                    <li class="for-tablet"><a href="{{ url_for('auth.login') }}">Login</a></li>
+                    <li class="for-tablet"><a href="{{ url_for('auth.register') }}">Register</a></li>
+                    <li><a href="{{ url_for('main.home') }}">Home</a></li>
+                    <li><a href="{{ url_for('main.branch') }}">Branch</a></li>
+                    <li><a href="{{ url_for('main.tags') }}">Tags</a></li>
+                    <li><a href="{{ url_for('main.mindmap') }}">Mindmap</a></li>
                     <li><a href="{{ url_for('main.about') }}">About</a></li>
-                    {% endif %}
-                    <li class="divider-vertical"></li>
-                    {% if request.path == '/create' %}
-                    <li class="active"><a href="{{ url_for('main.create') }}">New Fragment</a></li>
-                    {% else %}
-                    <li><a href="{{ url_for('main.create') }}">New Fragment</a></li>
-                    {% endif %}
-                    <li class="divider-vertical"></li>
+                    <li class="vertical-divider"></li>
+                    <li class="dropdown magz-dropdown"><a href="#">New <i class="ion-ios-arrow-right"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url_for('main.create') }}"><i class="icon ion-person"></i> New Fragment</a>
+                            </li>
+                            <li><a href="#"><i class="icon ion-heart"></i> Favorite</a></li>
+                            <li><a href="#"><i class="icon ion-chatbox"></i> Comments</a></li>
+                            <li><a href="#"><i class="icon ion-key"></i> Change Password</a></li>
+                            <li><a href="#"><i class="icon ion-settings"></i> Settings</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#"><i class="icon ion-log-out"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                    <li class="vertical-divider"></li>
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    {% if not current_user.username %}
-                    <li><a href="{{ url_for('auth.login') }}">Login</a></li>
-                    <li><a href="{{ url_for('auth.register') }}">Register</a></li>
-                    {% else %}
-                    <li><a href="#">Welcome {{ current_user.username }}!</a></li>
-                    <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
-                    {% endif %}
-                </ul>
-            </div><!--/.nav-collapse -->
+            </div>
         </div>
     </nav>
+    <!-- End nav -->
+</header>
+
+
+{% with messages = get_flashed_messages(with_categories=True) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ message }}
 </div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+{% if form and form.errors %}
+<div class="alert alert-error">Errors occured verifying your input. Please check the marked fields
+    below.
+</div>
+{% endif %}
+{% block container%}
 
-<div class="container"  style="min-height: 750px">
-    {% block container%}
-    <div class="row">
-        <div class="col-md-10">
-            {% block header %}
+<section class="home">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-sm-12 col-xs-12">
 
-            {% endblock header %}
+                {% block content %}
+                {% endblock content %}
+            </div>
+            <div class="col-xs-6 col-md-4 sidebar" id="sidebar">
+                <div class="sidebar-title for-tablet">Sidebar</div>
+                {% block sidebar %}
+                {% endblock sidebar %}
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-8">
-            {% with messages = get_flashed_messages(with_categories=True) %}
-            {% if messages %}
-            {% for category, message in messages %}
-            <div class="alert alert-{{ category }}">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                {{ message }}
+</section>
+{% endblock container%}
+
+<!-- Start footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="copyright">
+                    COPYRIGHT &copy; ThreeFish 2018. ALL RIGHT RESERVED.
+                    <div>
+                        Made with <i class="ion-heart"></i> by <a href="http://threefish.xyz">Allen</a>
+                    </div>
+                </div>
             </div>
-            {% endfor %}
-            {% endif %}
-            {% endwith %}
-            {% if form and form.errors %}
-            <div class="alert alert-error">Errors occured verifying your input. Please check the marked fields below.
-            </div>
-            {% endif %}
-            {% block content %}
-            {% endblock content %}
-        </div>
-        <div class="col-md-3 col-md-offset-1">
-            {% block sidebar %}
-            {% endblock sidebar %}
         </div>
     </div>
-    {% endblock container%}
-</div>
-<footer class="main-footer">
-    <p>Memento project built by <a href="https://threefish.xyz">ThreeFish</a>.</p>
-    <p>
-        <a href="#">Back to top</a>
-    </p>
 </footer>
+<!-- End Footer -->
+{% endblock body %}
+<!-- JS -->
+<script src="{{ url_for('static', filename='ui/js/jquery.js') }}"></script>
+<script src="{{ url_for('static', filename='ui/js/jquery.migrate.js') }}"></script>
+<script src="{{ url_for('static', filename='ui/scripts/bootstrap/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='ui/scripts/jquery-number/jquery.number.min.js') }}"></script>
+<script src="{{ url_for('static', filename='ui/scripts/owlcarousel/dist/owl.carousel.min.js') }}"></script>
+<script src="{{ url_for('static', filename='ui/scripts/magnific-popup/dist/jquery.magnific-popup.min.js') }}"></script>
+<script src="{{ url_for('static', filename='ui/scripts/easescroll/jquery.easeScroll.js') }}"></script>
+<script src="{{ url_for('static', filename='ui/scripts/sweetalert/dist/sweetalert.min.js') }}"></script>
+<script src="{{ url_for('static', filename='ui/scripts/toast/jquery.toast.min.js') }}"></script>
+<script src="{{ url_for('static', filename='ui/scripts/icheck/icheck.min.js') }}"></script>
+<script src="{{ url_for('static', filename='ui/js/demo.js') }}"></script>
+<script src="{{ url_for('static', filename='ui/js/e-magz.js') }}"></script>
+<script type="text/javascript">
+    var csrf_token = "{{ csrf_token() }}";
 
-<script type="text/javascript" src="{{ url_for('static', filename='jquery-3.2.1.min.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='ajaxfileupload.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='bootstrap-3.3.7/js/bootstrap.min.js') }}"></script>
-
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrf_token);
+            }
+        }
+    });
+</script>
 {% block bottom_js %} {% endblock bottom_js %}
 </body>
 </html>

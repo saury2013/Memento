@@ -1,33 +1,58 @@
 {% extends "base.html" %}
-{% block title -%}
--
-{% endblock title %}
+{% block header_css %}
+<style>
+    .my-tags-list{
+        margin: 0;
+        padding: 0;
+    }
+    .my-tags-list li {
+        float: left;
+        display: block;
+    }
+    .my-tags-list li a {
+        display: block;
+        margin-bottom: 5px;
+        padding: 3px 7px;
+        border: 1px solid #989898;
+        margin-right: 5px;
+        color: #000;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-size: 10px;
+        letter-spacing: 1px;
+    }
+</style>
+
+{% endblock header_css %}
 
 {% block content %}
 
 <!-- Jumbotron -->
 <div class="jumbotron">
     <h2>Welcome to your wiki!</h2>
-    <div class="input-group">
-        <input id="keyword" name="keyword" type="text" class="form-control" placeholder="Search for...">
-        <span class="input-group-btn">
-        <button class="btn btn-default" type="button" onclick="search()">Search</button>
-      </span>
-    </div>
+    <!--<div class="input-group">-->
+        <!--<input id="keyword" name="keyword" type="text" class="form-control" placeholder="Search for...">-->
+        <!--<span class="input-group-btn">-->
+        <!--<button class="btn btn-default" type="button" onclick="search()">Search</button>-->
+      <!--</span>-->
+    <!--</div>-->
 </div>
-<div id="page-title" ><h2>Nearest Fragments</h2></div>
-<hr>
+
+<div id="page-title" class="line">
+    <div>Latest Fragments</div>
+</div>
+
 <!-- Example row of columns -->
 <div class="row" id="page-show">
     {% for fragment in fragments %}
     <div class="panel panel-info">
         <div class="panel-body">
             <h4>{{ fragment.title }}</h4>
-                branch:&ensp;<span>{{ fragment.branch.name }}</span>&ensp;&ensp;
-                tags:&ensp;
-                {% for tag in fragment.tags %}
-                <span>{{ tag.name }}</span>&ensp;
-                {% endfor %}
+            branch:&ensp;<span>{{ fragment.branch.name }}</span>&ensp;&ensp;
+            tags:&ensp;
+            {% for tag in fragment.tags %}
+            <span>{{ tag.name }}</span>&ensp;
+            {% endfor %}
             {{ fragment.updatetime }}
         </div>
         <div class="panel-footer">
@@ -39,63 +64,91 @@
 
 </div>
 <nav aria-label="Page navigation">
-  <ul class="pagination hide">
-    <li class="previous">
-      <a href="#" aria-label="Previous">
-        <span aria-hidden="true">Prev</span>
-      </a>
-    </li>
-    <li class="next">
-      <a href="#" aria-label="Next">
-        <span aria-hidden="true">Next</span>
-      </a>
-    </li>
-  </ul>
+    <ul class="pagination hide">
+        <li class="previous">
+            <a href="#" aria-label="Previous">
+                <span aria-hidden="true">Prev</span>
+            </a>
+        </li>
+        <li class="next">
+            <a href="#" aria-label="Next">
+                <span aria-hidden="true">Next</span>
+            </a>
+        </li>
+    </ul>
 </nav>
 
 
-{% endblock %}
+{% endblock content %}
 {% block sidebar %}
-<div class="sidebar-module sidebar-module-inset">
-    <h4>TODO:</h4>
-    <p>业精于勤，荒于嬉；行成于思，毁于随。</p>
-    <p><em>-韩愈</em> </p>
-</div>
-<div class="sidebar-module">
-    <h4>Branch</h4>
-    <ol class="list-unstyled">
-        {% for branch in branchs %}
-        <li><a href="{{ url_for('main.result_by_branch',name=branch.name,page=1) }}">{{ branch.name }}</a></li>
-        {% endfor %}
-    </ol>
-</div>
 
-<div class="widget widget-tag-cloud">
-    <h3 class="widget-title">Tags Cloud</h3>
-    <ul>
-        {% for tag in tags %}
-        <li>
-            <a href="{{ url_for('main.result_by_tag',name=tag.name,page=1) }}">{{ tag.name }}</a>
-        </li>
-        {% endfor %}
-    </ul>
-</div>
+<aside>
+    <h1 class="aside-title">Sentence</h1>
+    <div class="aside-body">
+        <article class="aticle">
+            <div class="inner">
+                <figure>
+                    <a href="single.html">
+                        <img src="static/ui/images/news/img11.jpg" alt="Sample Article">
+                    </a>
+                </figure>
+                <div class="padding">
+                    <div class="detail">
+                        <div class="time">December 10, 2016</div>
+                        <div class="category"><a href="category.html">Healthy</a></div>
+                    </div>
+                    <h2></h2>
+                    <p>业精于勤，荒于嬉；行成于思，毁于随。</p>
+                </div>
+            </div>
+        </article>
+    </div>
+</aside>
+
+<aside>
+    <h1 class="aside-title">Branch</h1>
+    <div class="aside-body">
+        <div class="body-col">
+            <ol class="tags-list">
+                {% for branch in branchs %}
+                <li><a href="{{ url_for('main.result_by_branch',name=branch.name,page=1) }}">{{ branch.name }}</a></li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+</aside>
+<aside>
+    <h1 class="aside-title">Tags</h1>
+    <div class="aside-body">
+        <div class="body-col">
+            <ul class="my-tags-list">
+                {% for tag in tags %}
+                <li>
+                    <a href="{{ url_for('main.result_by_tag',name=tag.name,page=1) }}">{{ tag.name }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</aside>
+
 
 {% endblock sidebar %}
 
 {% block bottom_js %}
 
 <script>
-    var now_page=1;
+    var now_page = 1;
     var click_search = 0;
-    var result ;
+    var result;
+
     function search() {
         var keyword = $("#keyword").val();
         _url = "/api/search/" + keyword;
         var request = $.get(_url);
         request.done(function (data) {
             var result_length = data["result"].length;
-            var show_result = "About "+ result_length + " results.";
+            var show_result = "About " + result_length + " results.";
             $("#page-title").children().remove();
             $("#page-title").text(show_result);
             $("#page-title").addClass("text-danger");
@@ -106,46 +159,47 @@
             var pagination = $(".pagination");
             pagination.removeClass("hide");
             var PER_PAGE = 1;
-            var max_page_num = Math.ceil(result.length/PER_PAGE);
-            set_content(result,page_show,1,PER_PAGE);
+            var max_page_num = Math.ceil(result.length / PER_PAGE);
+            set_content(result, page_show, 1, PER_PAGE);
             click_search += 1;
-            pagination.delegate('li','click',function (e) {
+            pagination.delegate('li', 'click', function (e) {
                 // alert(e);
                 console.log($(this).attr("class"));
                 var li_class = $(this).attr("class");
 
-                if(li_class == "previous"){
-                    if(now_page > 1){
+                if (li_class == "previous") {
+                    if (now_page > 1) {
                         now_page -= 1;
-                        set_content(result,page_show,now_page,PER_PAGE);
+                        set_content(result, page_show, now_page, PER_PAGE);
                     }
-                }else if(li_class == "next"){
-                    if(max_page_num > now_page){
+                } else if (li_class == "next") {
+                    if (max_page_num > now_page) {
                         now_page += 1;
-                        console.log("result",result);
-                        set_content(result,page_show,now_page,PER_PAGE);
+                        console.log("result", result);
+                        set_content(result, page_show, now_page, PER_PAGE);
                     }
-                }else{
+                } else {
                     now_page = parseInt(li_class);
-                    set_content(result,page_show,now_page,PER_PAGE);
+                    set_content(result, page_show, now_page, PER_PAGE);
                 }
             });
         });
     }
-    function set_content(data,element,page,num) {
+
+    function set_content(data, element, page, num) {
         element.children().remove();
-        $.each( $(".pagination li"), function() {
+        $.each($(".pagination li"), function () {
             var my_class = $(this).attr("class");
-            if (my_class != "previous" && my_class != "next"){
+            if (my_class != "previous" && my_class != "next") {
                 $(this).remove();
             }
         });
 
         var data_length = data.length;
-        var page_num = Math.ceil(data_length/num);
-        console.log("page_num",page_num);
-        if (page <= page_num){
-            for(i = (page-1)*num;i<page*num&&i<data_length;i++){
+        var page_num = Math.ceil(data_length / num);
+        console.log("page_num", page_num);
+        if (page <= page_num) {
+            for (i = (page - 1) * num; i < page * num && i < data_length; i++) {
                 var div_result = "<div  class=\"panel panel-danger\"><div class=\"panel-body\"><a href='/page/"
                     + data[i]["path"] + "'>"
                     + data[i]["title"]
@@ -154,13 +208,13 @@
                     + "</div></div>";
                 element.append(div_result);
             }
-            if(true){
+            if (true) {
                 var ele_li = ""
-                for(j=1;j<=page_num&&j<5;j++){
+                for (j = 1; j <= page_num && j < 5; j++) {
                     if (j == now_page)
-                        ele_li = "<li class='" + j + "'><a href=\"#\"><strong>" + j +"</strong></a></li>";
+                        ele_li = "<li class='" + j + "'><a href=\"#\"><strong>" + j + "</strong></a></li>";
                     else
-                        ele_li = "<li class='" + j + "'><a href=\"#\">" + j +"</a></li>";
+                        ele_li = "<li class='" + j + "'><a href=\"#\">" + j + "</a></li>";
                     $(".pagination li:last").before(ele_li);
                     // $(".pagination li:last").css("background:red");
                 }

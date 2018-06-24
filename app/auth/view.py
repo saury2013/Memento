@@ -23,7 +23,13 @@ def login():
 @auth.route("/register/",methods=['GET','POST'])
 def register():
     form = RegisterForm()
+    print(form.username.data)
+    print(form.errors)
+    print(form.validate_on_submit())
+    print(form.is_submitted())
+    print(form.validate())
     if form.validate_on_submit():
+        print("-------",form.username.data)
         if form.password.data == form.password2.data:
             user = User.add(form.username.data,form.password.data)
             if user:

@@ -2,8 +2,9 @@
 {% import "helpers.html" as macros %}
 
 {% block header %}
-<h2 class="text-center">Result by Fragments</h2>
-<hr>
+<div id="page-title" class="line">
+    <div>Result Of Fragments</div>
+</div>
 {% endblock header %}
 
 {% block content %}
@@ -31,6 +32,6 @@
     {{ macros.render_pagination(pagination) }}
 </div>
 {% else %}
-<p>There are no tags in use so far.</p>
+<p>There are no fragment so far.</p>
 {% endif %}
 {% endblock content %}

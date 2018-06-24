@@ -2,117 +2,133 @@
 
 {% block header_css %}
 <link rel="stylesheet" href="{{ url_for('static',filename='editormd/css/editormd.css') }}"/>
+<style>
+    .modal{
+        margin-top: 15%
+    }
+</style>
 {% endblock header_css %}
 
 {% block container %}
-<div class="row">
-    <h1 class="text-center">Edit Fragment</h1>
-
-    <form method="post" action="{{ url_for('main.create') }}">
-        {{ form.hidden_tag() }}
+<section class="single">
+    <div class="container">
         <div class="row">
-            <div class="form-group">
-                {{ form.title.label }}
-                {% if form.title.errors %}
-                {% for e in form.title.errors %}
-                <p class="help-block">{{ e }}</p>
-                {% endfor %}
-                {% endif %}
-                {{ form.title(class_='form-control') }}
+            <div id="page-title" class="line">
+                <div>Create Fragments</div>
             </div>
 
+            <form method="post" action="{{ url_for('main.create') }}">
+                {{ form.hidden_tag() }}
+                <div class="row">
+                    <div class="form-group">
+                        {{ form.title.label }}
+                        {% if form.title.errors %}
+                        {% for e in form.title.errors %}
+                        <p class="help-block">{{ e }}</p>
+                        {% endfor %}
+                        {% endif %}
+                        {{ form.title(class_='form-control') }}
+                    </div>
 
-            <div class="form-group">
-                {{ form.body.label }}
-                {% if form.body.errors %}
-                {% for e in form.body.errors %}
-                <p class="help-block">{{ e }}</p>
-                {% endfor %}
-                {% endif %}
-                <div id="editormd" class="form-control">
-                    {{ form.body(text="1") }}
+
+                    <div class="form-group">
+                        {{ form.body.label }}
+                        {% if form.body.errors %}
+                        {% for e in form.body.errors %}
+                        <p class="help-block">{{ e }}</p>
+                        {% endfor %}
+                        {% endif %}
+                        <div id="editormd" class="form-control">
+                            {{ form.body(text="1") }}
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="form-group col-lg-3">
-                {{ form.branch.label }}
-                <!-- Button trigger modal -->
-                <button type="button" class="glyphicon glyphicon-plus" data-toggle="modal" data-target="#branchModal">
-                </button>
-                {% if form.branch.errors %}
-                {% for e in form.branch.errors %}
-                <p class="help-block">{{ e }}</p>
-                {% endfor %}
-                {% endif %}
-                {{ form.branch(class_='form-control') }}
-            </div>
-        </div>
-        <div class="row">
-            <div class="form-group col-lg-3">
-                {{ form.tags.label }}
-                <!-- Button trigger modal -->
-                <button type="button" class="glyphicon glyphicon-plus" data-toggle="modal" data-target="#tagModal">
-                </button>
-                {% if form.tags.errors %}
-                {% for e in form.tags.errors %}
-                <p class="help-block">{{ e }}</p>
-                {% endfor %}
-                {% endif %}
-                {{ form.tags(class_='form-control') }}
-
-            </div>
-        </div>
-
-
-        <div class="row">
-            <div class="form-group">
-                <input class="btn btn-success" type="submit" value="Submit">
-            </div>
-        </div>
-    </form>
-    <!-- tagModal -->
-    <div class="modal fade" id="tagModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Add Tag</h4>
+                <div class="row">
+                    <div class="form-group col-lg-3">
+                        {{ form.branch.label }}
+                        <!-- Button trigger modal -->
+                        <button type="button" class="glyphicon glyphicon-plus" data-toggle="modal"
+                                data-target="#branchModal">
+                        </button>
+                        {% if form.branch.errors %}
+                        {% for e in form.branch.errors %}
+                        <p class="help-block">{{ e }}</p>
+                        {% endfor %}
+                        {% endif %}
+                        {{ form.branch(class_='form-control') }}
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <input id="new_tag" type="text" name="tag" class="form-control" placeholder="input a new tag...">
+                <div class="row">
+                    <div class="form-group col-lg-3">
+                        {{ form.tags.label }}
+                        <!-- Button trigger modal -->
+                        <button type="button" class="glyphicon glyphicon-plus" data-toggle="modal"
+                                data-target="#tagModal">
+                        </button>
+                        {% if form.tags.errors %}
+                        {% for e in form.tags.errors %}
+                        <p class="help-block">{{ e }}</p>
+                        {% endfor %}
+                        {% endif %}
+                        {{ form.tags(class_='form-control') }}
+
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="add_tag()">Save changes</button>
+
+
+                <div class="row">
+                    <div class="form-group">
+                        <input class="btn btn-success" type="submit" value="Submit">
+                    </div>
                 </div>
-            </div>
-        </div>
+            </form>
+
     </div>
-    <!-- branchModal -->
-    <div class="modal fade" id="branchModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Add Branch</h4>
+        <!-- tagModal -->
+            <div class="modal fade" id="tagModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Add Tag</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input id="new_tag" type="text" name="tag" class="form-control"
+                                   placeholder="input a new tag...">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="add_tag()">Save changes</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <label>parent branch:</label>
-                    {{ form.branch(class_='form-control new_branch_parent') }}
-                    <label>new branch:</label>
-                    <input id="new_branch" type="text" name="branch" class="form-control" placeholder="new branch">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="add_branch()">Save changes</button>
+            </div>
+            <!-- branchModal -->
+            <div class="modal fade" id="branchModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Add Branch</h4>
+                        </div>
+                        <div class="modal-body">
+                            <label>parent branch:</label>
+                            {{ form.branch(class_='form-control new_branch_parent') }}
+                            <label>new branch:</label>
+                            <input id="new_branch" type="text" name="branch" class="form-control"
+                                   placeholder="new branch">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="add_branch()">Save changes</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+</section>
 {% endblock container %}
 
 {% block bottom_js %}
@@ -126,9 +142,9 @@
             height: 750,
             syncScrolling: "single",
             path: "{{ url_for('static',filename='editormd/lib/') }}",
-            imageUpload : true,
-            imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-            imageUploadURL : "/api/upload_image/",
+            imageUpload: true,
+            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL: "/api/upload_image/",
         });
     });
 
@@ -139,15 +155,28 @@
         }).done(function (response) {
             var res = JSON.parse(response);
             if (res["status"] == 200) {
-                alert("success to add the tag:" + res["tag"]["name"]);
-                // $("#tagModal").modal('hide');
+                // alert("success to add the tag:" + res["tag"]["name"]);
+                $("#tagModal").modal('hide');
+                swal(
+	                'Tags',
+	                'success to add the tag:'+ res["msg"]["name"],
+	                'success'
+                    );
                 location.reload();
             }
             else
-                alert("filed to add the tag:" + res["msg"]);
+                swal(
+	                'Tags',
+	                'filed to add the tag:'+ res["msg"],
+	                'error'
+                    );
 
         }).fail(function () {
-            alert("can not add the tag:" + name);
+            swal(
+	                'Tags',
+	                'cannot to add the tag:'+ res["msg"],
+	                'error'
+                    );
         });
     }
 
@@ -159,15 +188,26 @@
         }).done(function (response) {
             var res = JSON.parse(response);
             if (res["status"] == 200) {
-                alert("success to add the branch:" + res["branch"]["name"]);
-                // $("#branchModal").modal('hide');
+                swal(
+	                'Branchs',
+	                'success to add the branch:'+ res["msg"]["name"],
+	                'success'
+                    );
                 location.reload();
             }
             else
-                alert("filed to add the branch:" + res["msg"]);
+                swal(
+	                'Branchs',
+	                'filed to add the branch:'+ res["msg"]["name"],
+	                'error'
+                    );
 
         }).fail(function () {
-            alert("can not add the branch:" + name);
+            swal(
+	                'Branchs',
+	                'cannot to add the branch:'+ res["msg"]["name"],
+	                'error'
+                    );
         });
     }
 </script>

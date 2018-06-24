@@ -101,12 +101,16 @@ def url_for_other_page(page):
     return url_for(request.endpoint, **args)
 
 
-@main.route("/test/<int:id>",methods=['GET','POST'])
-def test(id):
+# @main.route("/test/<int:id>",methods=['GET','POST'])
+# def test(id):
+#
+#     # if request.method == "POST":
+#     #     branch = Branch.add('离散数学',praent_id=1)
+#     # tree = Branch.branch_tree()
+#     tree = Branch.sibling(id,sibling=[])
+#     print(tree)
+#     return "ok"#jsonify(tree)
 
-    # if request.method == "POST":
-    #     branch = Branch.add('离散数学',praent_id=1)
-    # tree = Branch.branch_tree()
-    tree = Branch.sibling(id,sibling=[])
-    print(tree)
-    return "ok"#jsonify(tree)
+@main.route("/test/")
+def test():
+    return render_template("search_result.html")

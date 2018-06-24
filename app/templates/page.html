@@ -4,51 +4,78 @@
 {% endblock header_css%}
 
 {% block container %}
+<section class="single">
+    <div class="container">
+        <div class="row">
 
-<div class="row">
+            <div class="col-md-9">
+                <ol class="breadcrumb">
+                    <li><a href="{{ url_for('main.home') }}">Home</a></li>
+                    <li class="active">fragment</li>
+                </ol>
+                <article class="article main-article">
+                    <header>
+                        <h1>{{ fragment.title }}</h1>
+                        <ul class="details">
+                            <li>{{ fragment.updatetime }}</li>
+                            <li><a>{{ fragment.branch.name }}</a></li>
+                            <li>By <a href="#">{{ author_name }}</a></li>
+                        </ul>
+                    </header>
+                    <div class="main">
+                        {{ fragment.html|safe }}
+                    </div>
+                    <footer>
+                        <div class="col">
+                            <ul class="tags">
+                                {% for tag in fragment.tags %}
+                                <li><a href="{{ url_for('main.result_by_tag',name=tag.name,page=1) }}">{{ tag.name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </footer>
+                </article>
+                <nav>
+                    <ul class="pager">
+                        <li><a href="{{ url_for('main.page',id=fragment.id-1) }}">Previous</a></li>
+                        <li><a href="{{ url_for('main.page',id=fragment.id+1) }}">Next</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-md-3 sidebar" id="sidebar">
+                <aside>
+                    <h1 class="aside-title">Relative Branch</h1>
+                    <div class="aside-body">
+                        <div class="body-col">
+                            <ol class="tags-list">
+                                {% for branch in branchs %}
+                                <li><a href="{{ url_for('main.result_by_branch',name=branch.name,page=1) }}">{{ branch.name }}</a></li>
+                                {% endfor %}
+                            </ol>
+                        </div>
+                    </div>
+                </aside>
+                <aside>
+                    <h1 class="aside-title">Relative Fragments</h1>
+                    <div class="aside-body">
+                        <div class="body-col">
+                            <ol class="tags-list">
+                                {% if relative_fragments %}
+                                {% for f in relative_fragments %}
+                                {% if f.title != fragment.title %}
+                                <li><a href="{{ url_for('main.page',id=f.id) }}">{{ f.title }}</a></li>
+                                {% endif %}
+                                {% endfor %}
+                                {% else %}
+                                no relative fragments yet.
+                                {% endif %}
+                            </ol>
+                        </div>
+                    </div>
+                </aside>
 
-    <div class="col-lg-8 main-main">
-
-        <div class="main-post">
-            <h2 class="main-post-title">{{ fragment.title }}</h2>
-            <p class="main-post-meta">{{ fragment.updatetime }} by <a href="#">{{ author_name }}</a></p>
-            {{ fragment.html|safe }}
-        </div><!-- /.main-post -->
-
-
-        <nav>
-            <ul class="pager">
-                <li><a href="{{ url_for('main.page',id=fragment.id-1) }}">Previous</a></li>
-                <li><a href="{{ url_for('main.page',id=fragment.id+1) }}">Next</a></li>
-            </ul>
-        </nav>
-
-    </div><!-- /.main-main -->
-
-    <div class="col-lg-3 col-sm-offset-1 main-sidebar">
-        <div class="sidebar-module">
-            <h4>Relative Branch</h4>
-            <ol class="list-unstyled">
-                {% for branch in branchs %}
-                <li><a href="{{ url_for('main.result_by_branch', name=branch.name,page=1) }}">{{ branch.name }}</a></li>
-                {% endfor %}
-            </ol>
+            </div>
         </div>
-        <div class="sidebar-module">
-            <h4>Relative Fragments</h4>
-            <ol class="list-unstyled">
-                {% if relative_fragments %}
-                {% for f in relative_fragments %}
-                {% if f.title != fragment.title %}
-                <li><a href="{{ url_for('main.page',id=f.id) }}">{{ f.title }}</a></li>
-                {% endif %}
-                {% endfor %}
-                {% else %}
-                no relative fragments yet.
-                {% endif %}
-            </ol>
-        </div>
-    </div><!-- /.main-sidebar -->
-
-</div><!-- /.row -->
+    </div>
+</section>
 {% endblock container %}
