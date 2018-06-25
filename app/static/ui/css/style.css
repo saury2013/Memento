@@ -2991,8 +2991,8 @@ aside .ads figcaption {
 footer.footer {
   background-color: #252e38;
   color: #848f9a;
-  padding: 20px 0;
-  padding-top: 50px;
+  /*padding: 20px 0;*/
+  /*padding-top: 50px;*/
   border-top: 5px solid #F73F52;
 }
 footer.footer a {

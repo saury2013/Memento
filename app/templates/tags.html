@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 {% import "helpers.html" as macros %}
 
-{% block header %}
-<h2 class="text-center">Index by Tags</h2>
-<hr>
-{% endblock header %}
+{% block header_css %}
+<style>
+    .modal{
+        margin-top: 15%
+    }
+</style>
+{% endblock header_css %}
 
 {% block content %}
 {% if tags %}
@@ -20,7 +23,7 @@
 		<tbody>
 			{% for tag in tags %}
 				<tr>
-                    <td><input type="checkbox" name="category" checked></td>
+                    <td><input type="checkbox" name="tag" value="{{ tag.id }}"></td>
 					<td>{{ tag.id }}</td>
 					<td><a href="{{ url_for('main.result_by_tag', name=tag.name,page=1) }}">{{ tag.name }}</a></td>
 					<td>{{ tag.fragments|length }}</td>
