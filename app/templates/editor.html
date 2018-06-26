@@ -44,11 +44,11 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-lg-3">
+                    <div class="form-group col-md-3">
                         {{ form.branch.label }}
                         <!-- Button trigger modal -->
                         <button type="button" class="glyphicon glyphicon-plus" data-toggle="modal"
-                                data-target="#branchModal">
+                                data-target="#branchModal" onclick="branch_init()">
                         </button>
                         {% if form.branch.errors %}
                         {% for e in form.branch.errors %}
@@ -59,7 +59,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-lg-3">
+                    <div class="form-group col-md-3">
                         {{ form.tags.label }}
                         <!-- Button trigger modal -->
                         <button type="button" class="glyphicon glyphicon-plus" data-toggle="modal"
@@ -77,9 +77,9 @@
 
 
                 <div class="row">
-                    <div class="form-group">
-                        <input class="btn btn-success" type="submit" value="Submit">
-                    </div>
+                    <div class="form-group text-right col-md-3">
+                            <button class="btn btn-primary btn-block">Submit</button>
+                        </div>
                 </div>
             </form>
 
@@ -115,7 +115,7 @@
                         </div>
                         <div class="modal-body">
                             <label>parent branch:</label>
-                            {{ form.branch(class_='form-control new_branch_parent') }}
+                            <select class="form-control new_branch_parent" name="branch" required=""></select>
                             <label>new branch:</label>
                             <input id="new_branch" type="text" name="branch" class="form-control"
                                    placeholder="new branch">
@@ -148,6 +148,10 @@
         });
     });
 
+    function branch_init() {
+        $(".new_branch_parent").append($("#branch").children().clone());
+    }
+
     function add_tag() {
 
         $.post('/api/add_tag/', {
@@ -162,7 +166,12 @@
 	                'success to add the tag:'+ res["msg"]["name"],
 	                'success'
                     );
-                location.reload();
+                var tag_id = res["tag"]["id"];
+                var tag_name = res["tag"]["name"];
+                var option_ele = "<option value='"+tag_id+"'>"+tag_name+"</option>";
+                $("#tags").append(option_ele);
+
+                // location.reload();
             }
             else
                 swal(
@@ -178,7 +187,7 @@
 	                'error'
                     );
         });
-    }
+    };
 
     function add_branch() {
 
@@ -186,6 +195,7 @@
             name: $("#new_branch").val(),
             parent: $(".new_branch_parent").val()
         }).done(function (response) {
+            $("#branchModal").modal('hide');
             var res = JSON.parse(response);
             if (res["status"] == 200) {
                 swal(
@@ -193,7 +203,11 @@
 	                'success to add the branch:'+ res["msg"]["name"],
 	                'success'
                     );
-                location.reload();
+                var branch_id = res["branch"]["id"]
+                var branch_name = res["branch"]["name"]
+                var option_ele = "<option value='"+branch_id+"'>"+branch_name+"</option>"
+                $("#branch").append(option_ele);
+                // location.reload();
             }
             else
                 swal(

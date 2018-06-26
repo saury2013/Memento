@@ -5,6 +5,7 @@ from sqlalchemy.orm import load_only
 from sqlalchemy import func
 from flask import abort
 from markdown import Markdown,markdown
+import re
 
 from app.models import db,fragment_tags_table
 from app.models.tag import Tag
@@ -22,6 +23,7 @@ class Fragment(db.Model):
     title = db.Column(db.String(255),nullable=False,default="",index=True)
     access = db.Column(db.Integer,nullable=False,default=1)
     status = db.Column(db.Integer,nullable=False,default=0)
+    brief = db.Column(db.String(300),nullable=False,default="")
     markdown = db.deferred(db.Column(LONGTEXT,default="",nullable=False))
     html = db.deferred(db.Column(LONGTEXT,default="",nullable=False))
     publish_markdown = db.deferred(db.Column(LONGTEXT,default="",nullable=False))
@@ -45,11 +47,23 @@ class Fragment(db.Model):
             return fragment
         abort(404)
 
+    def set_brief(self,html_str):
+        str = re.sub(r'</?\w+[^>]*>', '', html_str)
+        self.brief = str[:300]
+
     def save(self):
         self.html = self.markdown2html(self.markdown)
+        self.set_brief(self.html)
         db.session.add(self)
         db.session.commit()
         search_helper.add_document(self.title,str(self.id),self.markdown)
+
+    def update(self):
+        self.html = self.markdown2html(self.markdown)
+        self.set_brief(self.html)
+        db.session.update(self)
+        db.session.commit()
+        search_helper.update_document(self.title, str(self.id), self.markdown)
 
     def markdown2html(self,content):
         # md = Markdown(['codehilite', 'fenced_code', 'meta', 'tables'])

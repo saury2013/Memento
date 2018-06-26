@@ -36,7 +36,7 @@
                 <div class="col-md-3 col-sm-12">
                     <div class="brand">
                         <a href="{{ url_for('main.home') }}">
-                            <img src="{{ url_for('static', filename='ui/images/logo.png') }}" alt="Magz Logo">
+                            <img src="{{ url_for('static', filename='ui/images/threefish_log.png') }}" alt="ThreeFish Logo">
                         </a>
                     </div>
                 </div>
@@ -90,7 +90,7 @@
         <div class="container">
             <div class="brand">
                 <a href="{{ url_for('main.home') }}">
-                    <img src="{{ url_for('static', filename='ui/images/logo.png') }}" alt="Magz Logo">
+                    <img src="{{ url_for('static', filename='ui/images/threefish_log.png') }}" alt="ThreeFish Logo">
                 </a>
             </div>
             <div class="mobile-toggle">
@@ -109,20 +109,13 @@
                     <li><a href="{{ url_for('main.tags') }}">Tags</a></li>
                     <li><a href="{{ url_for('main.mindmap') }}">Mindmap</a></li>
                     <li><a href="{{ url_for('main.about') }}">About</a></li>
-                    <li class="vertical-divider"></li>
                     <li class="dropdown magz-dropdown"><a href="#">New <i class="ion-ios-arrow-right"></i></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ url_for('main.create') }}"><i class="icon ion-person"></i> New Fragment</a>
-                            </li>
-                            <li><a href="#"><i class="icon ion-heart"></i> Favorite</a></li>
-                            <li><a href="#"><i class="icon ion-chatbox"></i> Comments</a></li>
-                            <li><a href="#"><i class="icon ion-key"></i> Change Password</a></li>
-                            <li><a href="#"><i class="icon ion-settings"></i> Settings</a></li>
+                            <li><a href="{{ url_for('main.create') }}"><i class="icon ion-person"></i> New Fragment</a></li>
                             <li class="divider"></li>
-                            <li><a href="#"><i class="icon ion-log-out"></i> Logout</a></li>
+                            <li><a href="#"><i class="icon ion-log-out"></i> Settings</a></li>
                         </ul>
                     </li>
-                    <li class="vertical-divider"></li>
                 </ul>
             </div>
         </div>
@@ -198,7 +191,6 @@
 <script src="{{ url_for('static', filename='ui/js/e-magz.js') }}"></script>
 <script type="text/javascript">
     var csrf_token = "{{ csrf_token() }}";
-
     $.ajaxSetup({
         beforeSend: function(xhr, settings) {
             if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {

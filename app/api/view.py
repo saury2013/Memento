@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from flask import make_response, request, jsonify,render_template
-from flask_login import login_required
+from flask import make_response, request, jsonify,render_template,flash,redirect,url_for
+from flask_login import login_required,current_user
 import json
 from werkzeug.utils import secure_filename
 import os
@@ -12,10 +12,26 @@ from app.api import api
 from app.whoosh import search_helper
 from app import base_dir
 from app.api.form import SearchForm
+from app.main.forms.fragment import CreateFragmentForm
 
 UPLOAD_FOLDER = 'static/resource/uploads/image/'
 ALLOWED_EXTENSIONS = set(['bmp', 'webp', 'png', 'jpg', 'jpeg', 'gif'])
 
+
+@api.route("/delete_tags/", methods=['POST'])
+@login_required
+def delete_tags():
+    response = {"status": 500, "msg": "name is Null!"}
+    data = request.form.getlist("data[]")
+    if data != "":
+        tags_delete_failed = Tag.delete_tags(data)
+        if tags_delete_failed:
+            response['tags_delete_failed'] = [tag.name for tag in tags_delete_failed]
+            response["msg"] = "some tags cannot delete"
+        else:
+            response["msg"] = "tag has already delete!"
+        response["status"] = 200
+    return make_response(json.dumps(response))
 
 @api.route("/add_tag/", methods=['POST'])
 @login_required
@@ -99,4 +115,27 @@ def upload_image():
             result["url"] = "/"+ UPLOAD_FOLDER + filename
             return jsonify(result)
 
+@api.route("/fragment_update/<int:id>", methods=['GET','POST'])
+@login_required
+def fragment_update(id):
+    fragment = Fragment.get_or_404(id)
+    form = CreateFragmentForm()
+    if request.method == 'GET':
+        form.title.data = fragment.title
+        form.body.data = fragment.markdown
+        form.branch.choices = Branch.get_all_choices()
+        form.tags.choices = Tag.get_all_chioces()
+    elif request.method == 'POST':
+        if form.validate_on_submit():
+            fragment.title = form.title.data
+            fragment.markdown = form.body.data
+            fragment.user_id = current_user.id
+            fragment.branch_id = form.branch.data
+            tags_id = form.tags.data
+            tags = Tag.get_by_ids(tags_id)
+            fragment.tags = tags
+            fragment.update()
+            flash('Edit Saved.', category='success')
+            return redirect(url_for("main.home"))
 
+    return render_template("editor.html",form=form)

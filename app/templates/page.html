@@ -35,14 +35,25 @@
                         </div>
                     </footer>
                 </article>
-                <nav>
-                    <ul class="pager">
-                        <li><a href="{{ url_for('main.page',id=fragment.id-1) }}">Previous</a></li>
-                        <li><a href="{{ url_for('main.page',id=fragment.id+1) }}">Next</a></li>
-                    </ul>
-                </nav>
+                <!--<nav>-->
+                    <!--<ul class="pager">-->
+                        <!--<li><a href="{{ url_for('main.page',id=fragment.id-1) }}">Previous</a></li>-->
+                        <!--<li><a href="{{ url_for('main.page',id=fragment.id+1) }}">Next</a></li>-->
+                    <!--</ul>-->
+                <!--</nav>-->
             </div>
             <div class="col-md-3 sidebar" id="sidebar">
+                <aside>
+                    <h1 class="aside-title">page operators</h1>
+                    <div class="aside-body">
+                        <div class="body-col">
+                            <ul class="tags-list">
+                                <li><a href="{{ url_for('main.create') }}">new</a></li>
+                                <li><a href="{{ url_for('api.fragment_update',id=fragment.id) }}">edit</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </aside>
                 <aside>
                     <h1 class="aside-title">Relative Branch</h1>
                     <div class="aside-body">

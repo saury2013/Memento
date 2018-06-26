@@ -27,13 +27,18 @@ else:
 def add_document(title, path, content):
     writer = ix.writer()
     writer.add_document(title=title, path=path, content=content)
-    print("add index:",title, path, content)
+    writer.commit()
+
+def update_document(title, path, content):
+    writer = ix.writer()
+    writer.update_document(title=title, path=path, content=content)
     writer.commit()
 
 
 def search(search_str):
     with ix.searcher() as searcher:
         query = QueryParser("content", ix.schema).parse(search_str)
+        print(query)
         result = searcher.search(query)
         res = []
         for hit in result:

@@ -28,6 +28,19 @@ class Tag(db.Model):
         return Tag.query.all()
 
     @staticmethod
+    def delete_tags(data):
+        res = []
+        if len(data) > 0:
+            tags = db.session.query(Tag).filter(Tag.id.in_(data))# .delete(synchronize_session=False)
+            for tag in tags:
+                if len(tag.fragments) > 0:
+                    res.append(tag)
+                else:
+                    db.session.delete(tag)
+            db.session.commit()
+        return res
+
+    @staticmethod
     def get_all_chioces():
         tags = Tag.all()
         return [(tag.id,tag.name) for tag in tags]
