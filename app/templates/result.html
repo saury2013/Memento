@@ -22,7 +22,7 @@
             {{ fragment.updatetime }}
         </div>
         <div class="panel-footer">
-            {{ fragment.html|truncate(300, False) }}
+            {{ fragment.brief }}
             <p><a class=" pull-right" href="{{ url_for('main.page',id=fragment.id) }}">View details &raquo;</a></p>
         </div>
     </div>

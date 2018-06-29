@@ -56,7 +56,7 @@
             {{ fragment.updatetime }}
         </div>
         <div class="panel-footer">
-            {{ fragment.html|truncate(300, False) }}
+            {{ fragment.brief }}
             <p><a class=" pull-right" href="{{ url_for('main.page',id=fragment.id) }}">View details &raquo;</a></p>
         </div>
     </div>
@@ -89,7 +89,7 @@
             <div class="inner">
                 <figure>
                     <a href="single.html">
-                        <img src="static/ui/images/news/img11.jpg" alt="Sample Article">
+                        <img src="static/ui/images/book.jpg" alt="Sample Article">
                     </a>
                 </figure>
                 <div class="padding">
