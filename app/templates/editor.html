@@ -149,6 +149,7 @@
     });
 
     function branch_init() {
+        $(".new_branch_parent").children().remove();
         $(".new_branch_parent").append($("#branch").children().clone());
     }
 
