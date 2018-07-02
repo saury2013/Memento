@@ -138,4 +138,4 @@ def fragment_update(id):
             flash('Edit Saved.', category='success')
             return redirect(url_for("main.home"))
 
-    return render_template("editor.html",form=form)
+    return render_template("editor.html",form=form,fragment=fragment)

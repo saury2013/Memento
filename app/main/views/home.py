@@ -81,7 +81,7 @@ def page(id):
 def result_by_tag(name,page):
     all_fragments = Tag.get_fragments_by_tagname(name)
     count = len(all_fragments)
-    PER_PAGE = 1
+    PER_PAGE = 10
     fragments = all_fragments[(page-1)*PER_PAGE:page*PER_PAGE]
     pagination = Pagination(page,PER_PAGE,count)
     return render_template("result.html",fragments=fragments,pagination=pagination)
@@ -90,7 +90,7 @@ def result_by_tag(name,page):
 def result_by_branch(name,page):
     all_fragments = Branch.get_fragments_by_branchname(name)
     count = len(all_fragments)
-    PER_PAGE = 1
+    PER_PAGE = 10
     fragments = all_fragments[(page-1)*PER_PAGE:page*PER_PAGE]
     pagination = Pagination(page,PER_PAGE,count)
     return render_template("result.html",fragments=fragments,pagination=pagination)
