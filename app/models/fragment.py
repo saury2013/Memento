@@ -61,7 +61,7 @@ class Fragment(db.Model):
     def update(self):
         self.html = self.markdown2html(self.markdown)
         self.set_brief(self.html)
-        db.session.update(self)
+        db.session.add(self)
         db.session.commit()
         search_helper.update_document(self.title, str(self.id), self.markdown)
 

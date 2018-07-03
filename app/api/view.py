@@ -120,11 +120,11 @@ def upload_image():
 def fragment_update(id):
     fragment = Fragment.get_or_404(id)
     form = CreateFragmentForm()
+    form.branch.choices = Branch.get_all_choices()
+    form.tags.choices = Tag.get_all_chioces()
     if request.method == 'GET':
         form.title.data = fragment.title
         form.body.data = fragment.markdown
-        form.branch.choices = Branch.get_all_choices()
-        form.tags.choices = Tag.get_all_chioces()
     elif request.method == 'POST':
         if form.validate_on_submit():
             fragment.title = form.title.data
